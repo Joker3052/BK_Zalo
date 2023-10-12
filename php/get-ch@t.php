@@ -13,19 +13,52 @@
         while($row = mysqli_fetch_assoc($query)){
             if($row['outgoing_msg_id'] === $outgoing_id)// a sender
             { 
+                $img_name = $row['msg']; 
+       
+        // explode image and get the last extension like jpeg, png, jpg
+        $img_explode = explode('.',$img_name);
+        $img_ext = end($img_explode); // here we get the extension of an user upload img file
+        $extensions = ["jpeg", "png", "jpg"];// here some vaild img ext and we have store them to array
+        if(in_array($img_ext, $extensions) === true)
+        {
+            $output .= '<div class="chat outgoing">
+                            <div class="details">
+                            <img class="img-text" src="php/files/'. $row['msg'] .'" alt="">
+                            </div>
+                            </div>';
+        }
+        else{
                 $output .= '<div class="chat outgoing">
                             <div class="details">
                                 <p>'. $row['msg'] .'</p>
                             </div>
                             </div>';
+    }
             }else // a receiver
             {
+                $img_name = $row['msg']; 
+       
+                // explode image and get the last extension like jpeg, png, jpg
+                $img_explode = explode('.',$img_name);
+                $img_ext = end($img_explode); // here we get the extension of an user upload img file
+                $extensions = ["jpeg", "png", "jpg"];// here some vaild img ext and we have store them to array
+                if(in_array($img_ext, $extensions) === true)
+                {
+                    $output .= '<div class="chat incoming">
+                    <img class="img-user" src="php/images/'.$row['img'].'" alt="">
+                                    <div class="details">
+                                    <img class="img-text" src="php/files/'. $row['msg'] .'" alt="">
+                                    </div>
+                                    </div>';
+                }
+                else{
                 $output .= '<div class="chat incoming">
-                            <img src="php/images/'.$row['img'].'" alt="">
+                            <img class="img-user" src="php/images/'.$row['img'].'" alt="">
                             <div class="details">
                                 <p>'. $row['msg'] .'</p>
                             </div>
                             </div>';
+            }
             }
         }
 

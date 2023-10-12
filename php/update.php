@@ -1,19 +1,21 @@
 <?php
    session_start();
    include_once "config.php";
-   $fname = mysqli_real_escape_string($conn, $_POST['fname']);
-   $lname = mysqli_real_escape_string($conn, $_POST['lname']);
-   $fullname= $fname.' '.$lname;
+   $sql = mysqli_query($conn, "SELECT * FROM users WHERE unique_id = {$_SESSION['unique_id']}");
+   if(mysqli_num_rows($sql) > 0){
+     $row = mysqli_fetch_assoc($sql);
+   }
+   $fullname = mysqli_real_escape_string($conn, $_POST['fullname']);
    $email = mysqli_real_escape_string($conn, $_POST['email']);
-   $password = mysqli_real_escape_string($conn, $_POST['password']);
+  //  $password = mysqli_real_escape_string($conn, $_POST['password']);
   
-   if(!empty($fname) && !empty($lname) && !empty($email) && !empty($password))
+   if(!empty($fullname)  && !empty($email))
    {
     //check user email is valid or not
     if(filter_var($email, FILTER_VALIDATE_EMAIL)){
         //check eamil exist or not
         $sql = mysqli_query($conn, "SELECT * FROM users WHERE email = '{$email}'");
-        if(mysqli_num_rows($sql) > 0) // email exist
+        if((mysqli_num_rows($sql) > 0)&&($email!=$row['email'])) // email exist
         {
             echo "$email - This email already exist!";
         }
@@ -43,26 +45,20 @@
                     {
                         // echo 'success3';
                         $status = "Active now";// once signed up then his status will be active now
-                       $random_id = rand(time(),100000000);// create random id for user 
-                         $encrypt_pass = md5($password);
+                    //    $random_id = rand(time(),100000000);// create random id for user 
                        //let's  insert all user data inside table
-                       $sql2 = mysqli_query($conn,"INSERT INTO users (unique_id, fullname, email, password, img, status) 
-                       VALUES ({$random_id}, '{$fullname}', '{$email}', '{$encrypt_pass}', '{$new_img_name}', '{$status}')" );
-                      
-                      if($sql2)// if these data inserted 
+                    //    $sql2 = mysqli_query($conn,"UPDATE users (unique_id, fullname, email, password, img, status) 
+                    //    SET ({$random_id}, '{$fullname}', '{$email}', '{$password}', '{$new_img_name}', '{$status}')" );
+                    // $encrypt_pass = md5($password);
+                    $sql2 = mysqli_query($conn,"UPDATE users SET fullname='{$fullname}' ,email='{$email}' , img='{$new_img_name}'
+                     WHERE unique_id={$_SESSION['unique_id']}" );
+                    //   UPDATE Customers
+                    //   SET ContactName = 'Alfred Schmidt', City= 'Frankfurt'
+                    //   WHERE CustomerID = 1;
+                       if($sql2)// if these data inserted 
                       {
                         // echo 'success4';
-                        $sql3=mysqli_query($conn, "SELECT * FROM users WHERE email = '{$email}'");
-                        if(mysqli_num_rows($sql3) > 0)
-                        {
-                             $row = mysqli_fetch_assoc($sql3);
-                             $_SESSION['unique_id']= $row['unique_id']; //using this session we used user uniuqe_id in other php file
-                             echo "success";
-                           
-                        }
-                        else{
-                            echo "This email address not Exist!";
-                        }
+                        echo "success";
                       }
                       else{
                         echo "something went wrong";
@@ -72,7 +68,25 @@
                 }
                 else
                 {
-                    echo 'pl upload the img';
+                    // echo 'pl upload the img1';
+                    $status = "Active now";// once signed up then his status will be active now
+                    //    $random_id = rand(time(),100000000);// create random id for user 
+                       //let's  insert all user data inside table
+                    //    $sql2 = mysqli_query($conn,"UPDATE users (unique_id, fullname, email, password, img, status) 
+                    //    SET ({$random_id}, '{$fullname}', '{$email}', '{$password}', '{$new_img_name}', '{$status}')" );
+                    $sql2 = mysqli_query($conn,"UPDATE users SET fullname='{$fullname}' ,email='{$email}' , img='{$row['img']}'
+                     WHERE unique_id={$_SESSION['unique_id']}" );
+                    //   UPDATE Customers
+                    //   SET ContactName = 'Alfred Schmidt', City= 'Frankfurt'
+                    //   WHERE CustomerID = 1;
+                       if($sql2)// if these data inserted 
+                      {
+                        // echo 'success4';
+                        echo "success";
+                      }
+                      else{
+                        echo "something went wrong";
+                      }
                 }
             }
             else{

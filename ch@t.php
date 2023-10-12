@@ -14,6 +14,7 @@
     <title>BKzalo</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <style>img[alt="www.000webhost.com"]{display:none;}</style>
 </head>
 <body>
     <div class="wrapper">
@@ -47,18 +48,22 @@
             </div> -->
             
         </div>
-        <form action="#" class="typing-area" autocomplete="off">
+        <form action="#" class="typing-area" autocomplete="off" enctype="multipart/form-data">
             <!-- use to hiden inputs to send msg_sender_id and msg_receiver_id -->
             <!-- msg_sender_id -->
             <input type="text" name="outgoing_id" value="<?php echo $_SESSION['unique_id']?>" hidden>
             <!-- msg_receiver_id -->
             <input type="text" name="incoming_id" value="<?php echo $user_id?>" hidden> 
             <input type="text" name="message" class="input-field" placeholder="Type a message here...">
-            <button><i class="fa-solid fa-paper-plane"></i></button>
+            <button class="send"><i class="fa-solid fa-paper-plane"></i></button>
+            <input class="file-load"  type="file" name="file" hidden >
+            <button class="file-input"><i class="fa-regular fa-image"></i></button>
             <!-- <button><i class="fa-solid fa-heart"></i></button> -->
             <!-- <button><i class="fa-solid fa-thumbs-up"></i></button> -->
         </form>
         </section>
+        <section class="progress-area"></section>
+    <section class="uploaded-area"></section>
     </div>
     <script src="javascript/chat.js"></script>
 </body>

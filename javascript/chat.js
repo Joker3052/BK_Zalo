@@ -1,7 +1,9 @@
 const form = document.querySelector(".typing-area"),
 inputField = form.querySelector(".input-field"),
-sendBtn = form.querySelector("button"),
-chatBox = document.querySelector(".chat-box");
+sendBtn = form.querySelector(".send"),
+chatBox = document.querySelector(".chat-box"),
+fileInput = document.querySelector(".file-input"),
+fileLoad = document.querySelector(".file-load");;
 
 form.onsubmit = (e)=>
 {
@@ -26,6 +28,8 @@ sendBtn.onclick =()=>
       {
         if(xhr.status ===200)
         {
+          let data = xhr.response;  
+          console.log(data);  
           inputField.value = "";
           scrollToBottom();   
         }
@@ -71,4 +75,25 @@ setInterval(() =>{
 
 function scrollToBottom(){
   chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+// form click event
+fileInput.addEventListener("click", () =>{
+  fileLoad.click();
+});
+
+fileInput.onclick =()=>
+{
+     //ajax///////////////
+    let xhr = new XMLHttpRequest(); //creting xml object
+    xhr.open("POST","php/insert-ch@t.php",true);
+    xhr.onload = () =>{
+      let data = xhr.response;  
+       console.log(data);    
+       fileLoad.value="";
+       inputField.value=""; 
+    }
+    //we have to send the form data through ajax to php
+    let formdata = new FormData(form); //creating new form data Object
+    xhr.send(formdata);// send form data to php
 }
